@@ -43,6 +43,16 @@ Idempotent. Filer som redan är korrekt länkade skippas, regular files backupas
 
 Vid första körningen flyttas befintliga filer till `<fil>.backup.<timestamp>` bredvid originalet. Återställ med `mv <fil>.backup.<timestamp> <fil>` (ta först bort symlinken).
 
+## Avinstallera förinställda Omarchy-appar
+
+Körs **inte** av `install.sh`. Manuell körning:
+
+```sh
+./uninstall-omarchy-apps.sh
+```
+
+Tar bort webapps (via `omarchy webapp remove`) och pacman-paket (via `omarchy pkg drop`) jag inte använder. Idempotent — listan ligger högst upp i scriptet (`WEBAPPS` och `PACKAGES`), justera där för att anpassa.
+
 ## Yoga Pro 9 ljudfix
 
 Körs **inte** av `install.sh`. Manuell installation:
