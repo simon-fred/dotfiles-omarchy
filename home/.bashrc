@@ -10,3 +10,6 @@ source ~/.local/share/omarchy/default/bash/rc
 # Make an alias for invoking commands you use constantly
 # alias p='python'
 alias gs='git status'
+
+# nvm (Arch-paketet levererar init-helper:n)
+source /usr/share/nvm/init-nvm.sh
