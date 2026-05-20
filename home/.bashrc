@@ -12,4 +12,9 @@ source ~/.local/share/omarchy/default/bash/rc
 alias gs='git status'
 
 # nvm (Arch-paketet levererar init-helper:n)
+# Omarchy default kör `set +h` för mise; nvm anropar internt `hash -r`, vilket
+# annars triggar "bash: hash: hashing disabled" vid shell-start. Slå på
+# hashing tillfälligt under init.
+set -h
 source /usr/share/nvm/init-nvm.sh
+set +h
