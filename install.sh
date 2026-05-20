@@ -87,3 +87,6 @@ echo "Summary: $linked linked, $skipped already-linked, $backed_up backed up."
 echo
 echo "Yoga Pro 9 ljudfix körs separat:"
 echo "  sudo $REPO_DIR/yoga-pro-9-audio-fix/install.sh"
+echo
+echo "USB-webcam-fix (modprobe-quirk för dock-kamera med myror) körs separat:"
+echo "  sudo $REPO_DIR/usb-webcam-bandwidth-fix/install.sh"
