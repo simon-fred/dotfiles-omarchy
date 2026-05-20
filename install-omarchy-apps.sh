@@ -16,6 +16,7 @@ WEBAPPS=(
 PACKAGES=(
   alsa-firmware
   sof-firmware
+  azure-cli
   # dotnet-sdk
 )
 
