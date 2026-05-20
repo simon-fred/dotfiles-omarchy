@@ -15,6 +15,7 @@ FILES=(
   .config/hypr/bindings.conf
   .config/hypr/looknfeel.conf
   .config/hypr/autostart.conf
+  .config/hypr/hypridle.conf
   .config/omarchy/branding/about.txt
   .config/omarchy/branding/screensaver.txt
   .config/omarchy/extensions/menu.sh

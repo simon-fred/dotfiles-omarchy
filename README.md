@@ -8,6 +8,7 @@ Symlinkas från detta repo till `$HOME` av `./install.sh`:
 
 - `~/.bashrc`, `~/.bash_profile`
 - `~/.config/hypr/{monitors,input,bindings,looknfeel,autostart}.conf` — de fem filerna som `hyprland.conf` source:ar
+- `~/.config/hypr/hypridle.conf` — hypridle-config (screensaver/lås-timeouts)
 - `~/.config/omarchy/branding/{about,screensaver}.txt`
 - `~/.config/omarchy/extensions/menu.sh`
 
