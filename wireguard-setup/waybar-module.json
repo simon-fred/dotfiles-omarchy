@@ -1,0 +1,11 @@
+{
+  "custom/wireguard": {
+    "exec": "/usr/local/bin/wg-status",
+    "return-type": "json",
+    "interval": 5,
+    "signal": 11,
+    "format": "{}",
+    "on-click": "/usr/local/bin/wg-toggle",
+    "tooltip": true
+  }
+}

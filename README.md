@@ -64,6 +64,16 @@ sudo ./yoga-pro-9-audio-fix/install.sh
 
 Se [`yoga-pro-9-audio-fix/README.md`](yoga-pro-9-audio-fix/README.md) för detaljer (DMI-sanity-check, suspend-handling, avinstallation).
 
+## WireGuard-setup
+
+Körs **inte** av `install.sh`. Manuell installation:
+
+```sh
+sudo ./wireguard-setup/install.sh [path/till/config.conf]
+```
+
+Installerar `wireguard-tools` + `systemd-resolvconf`, kopierar configen till `/etc/wireguard/` (default-källa: `~/Downloads/WCG-Simon.conf`), lägger en NOPASSWD-sudoers-regel för start/stop, och patchar in en klickbar lås-ikon i waybar. Privat nyckel versioneras inte. Se [`wireguard-setup/README.md`](wireguard-setup/README.md).
+
 ## Avinstallera en fil
 
 ```sh

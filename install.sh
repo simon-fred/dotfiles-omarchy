@@ -90,3 +90,6 @@ echo "  sudo $REPO_DIR/yoga-pro-9-audio-fix/install.sh"
 echo
 echo "USB-webcam-fix (modprobe-quirk för dock-kamera med myror) körs separat:"
 echo "  sudo $REPO_DIR/usb-webcam-bandwidth-fix/install.sh"
+echo
+echo "WireGuard-setup (paket + /etc/wireguard/-config + waybar-toggle) körs separat:"
+echo "  sudo $REPO_DIR/wireguard-setup/install.sh"
