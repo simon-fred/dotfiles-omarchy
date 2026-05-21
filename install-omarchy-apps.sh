@@ -17,6 +17,9 @@ PACKAGES=(
   alsa-firmware
   sof-firmware
   azure-cli
+  bun
+  tmux
+  tmuxp
   # dotnet-sdk
 )
 

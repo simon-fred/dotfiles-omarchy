@@ -10,6 +10,7 @@ source ~/.local/share/omarchy/default/bash/rc
 # Make an alias for invoking commands you use constantly
 # alias p='python'
 alias gs='git status'
+alias devserver='tdev ~/Projects/self-checkin'
 
 # nvm (Arch-paketet levererar init-helper:n)
 # Omarchy default kör `set +h` för mise; nvm anropar internt `hash -r`, vilket

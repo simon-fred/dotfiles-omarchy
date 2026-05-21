@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# tdev — start (or re-enter) a tmuxp-driven dev session for a project.
+#
+# Usage: tdev <project-path>
+#
+# Looks for a .tools/tmuxp.yaml in the chosen git worktree, names the session
+# <project>-<branch-slug>, and prompts on collision (attach / kill /
+# kill-and-restart-elsewhere).
+
+set -euo pipefail
+
+YAML_PATH=".tools/tmuxp.yaml"
+
+die() { echo "error: $*" >&2; exit 1; }
+
+[[ $# -eq 1 ]] || die "usage: tdev <project-path>"
+
+project_path="$(realpath "$1")" || die "path not found: $1"
+[[ -d "$project_path" ]] || die "not a directory: $project_path"
+project_name="$(basename "$project_path")"
+
+git -C "$project_path" rev-parse --is-inside-work-tree >/dev/null 2>&1 \
+  || die "$project_path is not a git repository"
+
+mapfile -t worktrees < <(
+  git -C "$project_path" worktree list --porcelain \
+    | awk '/^worktree/ {print $2}'
+)
+
+session_name_for() {
+  local wt branch slug
+  wt="$1"
+  branch="$(git -C "$wt" rev-parse --abbrev-ref HEAD 2>/dev/null || echo detached)"
+  slug="${branch//\//-}"
+  echo "${project_name}-${slug}"
+}
+
+# If any session for this project is already running, prompt instead of
+# starting a new one.
+mapfile -t existing < <(
+  tmux list-sessions -F '#{session_name}' 2>/dev/null \
+    | grep -E "^${project_name}-" || true
+)
+
+if [[ ${#existing[@]} -gt 0 ]]; then
+  if [[ ${#existing[@]} -gt 1 ]]; then
+    target="$(printf '%s\n' "${existing[@]}" \
+      | gum choose --header "Multiple sessions for ${project_name}. Pick one:")"
+  else
+    target="${existing[0]}"
+  fi
+  [[ -n "$target" ]] || die "no session selected"
+
+  action="$(gum choose --header "Session '$target' is running. What now?" \
+    "Attach" "Kill" "Kill and start for another worktree")"
+
+  case "$action" in
+    "Attach")
+      exec tmux attach -t "$target"
+      ;;
+    "Kill")
+      tmux kill-session -t "$target"
+      echo "killed: $target"
+      exit 0
+      ;;
+    "Kill and start for another worktree")
+      tmux kill-session -t "$target"
+      echo "killed: $target"
+      # Fall through to the worktree picker + launch below.
+      ;;
+    *)
+      die "no action chosen"
+      ;;
+  esac
+fi
+
+# Pick worktree (main alone if no extras).
+if [[ ${#worktrees[@]} -eq 1 ]]; then
+  selected="${worktrees[0]}"
+else
+  selected="$(printf '%s\n' "${worktrees[@]}" \
+    | gum choose --header "Pick worktree for ${project_name}:")"
+fi
+[[ -n "$selected" ]] || die "no worktree selected"
+
+yaml_path="$selected/$YAML_PATH"
+[[ -f "$yaml_path" ]] || die "missing $YAML_PATH in $selected — this project needs a tmuxp config"
+
+session_name="$(session_name_for "$selected")"
+cd "$selected"
+exec tmuxp load -y -s "$session_name" "$yaml_path"

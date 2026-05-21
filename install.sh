@@ -19,6 +19,8 @@ FILES=(
   .config/omarchy/branding/about.txt
   .config/omarchy/branding/screensaver.txt
   .config/omarchy/extensions/menu.sh
+  .claude/settings.json
+  .local/bin/tdev
 )
 
 timestamp="$(date +%Y%m%d-%H%M%S)"

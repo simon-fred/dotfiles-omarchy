@@ -11,6 +11,7 @@ Symlinkas från detta repo till `$HOME` av `./install.sh`:
 - `~/.config/hypr/hypridle.conf` — hypridle-config (screensaver/lås-timeouts)
 - `~/.config/omarchy/branding/{about,screensaver}.txt`
 - `~/.config/omarchy/extensions/menu.sh`
+- `~/.claude/settings.json` — Claude Code-config (statusLine via `bunx ccusage statusline` — `bun` installeras av `install-omarchy-apps.sh`)
 
 `~/.config/omarchy/current/` versioneras **inte** — det är runtime-state som Omarchy skriver till.
 
