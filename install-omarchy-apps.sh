@@ -23,6 +23,12 @@ PACKAGES=(
   # dotnet-sdk
 )
 
+# AUR-paket — `omarchy pkg add` använder pacman och hittar inte AUR-paket,
+# så de måste gå via `omarchy pkg aur add` (yay/paru under huven).
+AUR_PACKAGES=(
+  bruno-bin
+)
+
 command -v omarchy >/dev/null || { echo "✗ omarchy saknas — kör inte detta på en non-omarchy-maskin" >&2; exit 1; }
 
 # --- Browser: Zen som default --------------------------------------------------
@@ -79,6 +85,27 @@ if [[ ${#to_add[@]} -gt 0 ]]; then
   added_pkgs=${#to_add[@]}
 fi
 
+# --- AUR-paket -----------------------------------------------------------------
+# Installerade AUR-paket dyker upp i pacman-DB:n, så `pacman -Q` funkar som
+# idempotens-check även här.
+skipped_aur=0
+to_add_aur=()
+for pkg in "${AUR_PACKAGES[@]}"; do
+  if pacman -Q "$pkg" >/dev/null 2>&1; then
+    echo "= AUR-paket redan installerat: $pkg"
+    skipped_aur=$((skipped_aur+1))
+  else
+    to_add_aur+=("$pkg")
+  fi
+done
+
+added_aur=0
+if [[ ${#to_add_aur[@]} -gt 0 ]]; then
+  echo "- installerar AUR-paket: ${to_add_aur[*]}"
+  omarchy pkg aur add "${to_add_aur[@]}"
+  added_aur=${#to_add_aur[@]}
+fi
+
 # --- Node LTS + pnpm via nvm ---------------------------------------------------
 # nvm sätter PATH/funktioner i ett enda skal — subshell så vi inte muterar
 # anropande shell.
@@ -123,4 +150,4 @@ fi
 
 # --- Summary -------------------------------------------------------------------
 echo
-echo "Summary: $installed_webapps webapps installerade ($skipped_webapps redan där), $added_pkgs paket installerade ($skipped_pkgs redan där), node=$node_status, pnpm=$pnpm_status."
+echo "Summary: $installed_webapps webapps installerade ($skipped_webapps redan där), $added_pkgs paket installerade ($skipped_pkgs redan där), $added_aur AUR-paket installerade ($skipped_aur redan där), node=$node_status, pnpm=$pnpm_status."
