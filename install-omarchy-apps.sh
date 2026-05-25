@@ -27,6 +27,7 @@ PACKAGES=(
 # så de måste gå via `omarchy pkg aur add` (yay/paru under huven).
 AUR_PACKAGES=(
   bruno-bin
+  ngrok
 )
 
 command -v omarchy >/dev/null || { echo "✗ omarchy saknas — kör inte detta på en non-omarchy-maskin" >&2; exit 1; }
