@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Spawn Slack, Teams, Outlook on workspace 3 in a deterministic dwindle layout.
+#
+# Landscape monitor (laptop/Samsung):
+#   Slack left half | Teams top-right | Outlook bottom-right
+# Portrait monitor (ASUS, home setup):
+#   Slack top | Teams middle | Outlook bottom
+#
+# Briefly switches focus to ws3 so dwindle uses focused-window splits to lay them out,
+# then restores the originally focused workspace.
+
+set -euo pipefail
+
+START_WS=$(hyprctl activeworkspace -j | jq -r '.id')
+hyprctl dispatch workspace 3 >/dev/null
+sleep 0.2
+
+wait_addr() {
+  local pattern=$1 addr=
+  for _ in $(seq 100); do
+    addr=$(hyprctl clients -j | jq -r --arg p "$pattern" '.[] | select(.class | test($p; "i")) | .address' | head -n1)
+    [[ -n $addr ]] && { echo "$addr"; return 0; }
+    sleep 0.1
+  done
+  return 1
+}
+
+omarchy-launch-webapp "https://app.slack.com/client/T042JUS8Y8K/C042XLXLW57"
+slack=$(wait_addr 'chrome-app\.slack')
+hyprctl dispatch focuswindow "address:$slack" >/dev/null
+
+omarchy-launch-webapp "https://teams.cloud.microsoft/"
+teams=$(wait_addr 'chrome-teams\.cloud')
+hyprctl dispatch focuswindow "address:$teams" >/dev/null
+
+omarchy-launch-webapp "https://outlook.office.com/mail/?deeplink=mail%2F"
+wait_addr 'chrome-outlook\.office' >/dev/null
+
+# Portrait setup: after spawning, Teams-Outlook ended up side-by-side (Teams region was
+# landscape-ish so dwindle picked horizontal). Flip the pair direction to vertical so
+# Outlook lands below Teams.
+topo=$(cat "${XDG_RUNTIME_DIR:-/tmp}/hypr-topology" 2>/dev/null || echo "")
+if [[ $topo == home ]]; then
+  hyprctl dispatch togglesplit >/dev/null
+fi
+
+hyprctl dispatch workspace "$START_WS" >/dev/null

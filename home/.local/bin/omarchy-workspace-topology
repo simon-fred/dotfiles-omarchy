@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Bind workspaces to monitors based on current connected-monitor topology.
+# Runs at Hyprland session start, before app autostart in autostart.conf.
+
+set -euo pipefail
+
+LAPTOP='China Star Optoelectronics Technology Co. Ltd 0x1640 0x00006004'
+SAMSUNG='Samsung Electric Company LS27A600U HNMX400403'
+ASUS='Ancor Communications Inc VG248 J4LMQS008759'
+
+mons=$(hyprctl monitors -j | jq -r '.[].description')
+has() { grep -qxF "$1" <<<"$mons"; }
+
+bind() { hyprctl keyword workspace "$1, monitor:desc:$2, persistent:true" >/dev/null; }
+
+if has "$LAPTOP" && has "$SAMSUNG" && has "$ASUS"; then
+  topo=home
+  bind 1 "$LAPTOP";  bind 5 "$LAPTOP";  bind 6 "$LAPTOP"
+  bind 2 "$SAMSUNG"; bind 4 "$SAMSUNG"
+  bind 3 "$ASUS"
+elif has "$LAPTOP" && has "$SAMSUNG"; then
+  topo=office
+  bind 1 "$LAPTOP";  bind 3 "$LAPTOP";  bind 4 "$LAPTOP"
+  bind 2 "$SAMSUNG"; bind 5 "$SAMSUNG"; bind 6 "$SAMSUNG"
+else
+  topo=solo
+  for ws in 1 2 3 4 5 6; do bind "$ws" "$LAPTOP"; done
+fi
+
+echo "$topo" > "${XDG_RUNTIME_DIR:-/tmp}/hypr-topology"

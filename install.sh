@@ -21,6 +21,8 @@ FILES=(
   .config/omarchy/extensions/menu.sh
   .claude/settings.json
   .local/bin/tdev
+  .local/bin/omarchy-workspace-topology
+  .local/bin/omarchy-workspace3-layout
 )
 
 timestamp="$(date +%Y%m%d-%H%M%S)"
