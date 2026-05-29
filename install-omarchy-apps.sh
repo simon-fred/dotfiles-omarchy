@@ -17,6 +17,7 @@ PACKAGES=(
   alsa-firmware
   sof-firmware
   azure-cli
+  bitwarden
   bun
   cloudflared
   tmux
