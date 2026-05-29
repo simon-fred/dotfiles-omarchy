@@ -19,3 +19,14 @@ alias devserver='tdev ~/Projects/self-checkin'
 set -h
 source /usr/share/nvm/init-nvm.sh
 set +h
+
+# dotnet global tools (dotnet-ef m.fl.)
+export PATH="$HOME/.dotnet/tools:$PATH"
+
+# ASP.NET Core dev-certs HTTPS trust för OpenSSL-baserade klienter (curl m.fl.)
+export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:/etc/ssl/certs"
+
+# Pinna self-checkin SQL Server 2025-containern till P-cores (0-11) på denna
+# Core Ultra 9 185H — workaround för sosnumap.cpp-assertet på hybrid-CPU.
+# Läses av backend/docker-compose.base.yml.
+export SQLSERVER_CPUSET=0-11
