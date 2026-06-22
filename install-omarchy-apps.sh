@@ -20,6 +20,7 @@ PACKAGES=(
   bitwarden
   bun
   cloudflared
+  gimp
   tmux
   tmuxp
   # dotnet-sdk
